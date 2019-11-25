@@ -66,7 +66,9 @@ RUN  rm -rf /var/lib/apt/lists/* \
 
 # Install composer
 COPY docker-install-composer /usr/local/bin/docker-install-composer
-RUN chmod +x /usr/local/bin/docker-install-composer && docker-install-composer
+RUN chmod +x /usr/local/bin/docker-install-composer
+RUN docker-install-composer \
+    && mv composer.phar /usr/bin/composer
 
 # Install php-cs-fixer
 RUN curl -L http://cs.sensiolabs.org/download/php-cs-fixer-v2.phar -o php-cs-fixer \
@@ -82,6 +84,7 @@ RUN usermod -u 1000 www-data
 
 # Add custom start script
 COPY docker-app-start.sh /usr/local/bin/docker-app-start
+RUN chmod +x /usr/local/bin/docker-app-start
 CMD ["docker-app-start"]
 
 # Add php custom config
